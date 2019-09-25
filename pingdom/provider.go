@@ -11,23 +11,8 @@ import (
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
-			"user": &schema.Schema{
+			"api_token": {
 				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"password": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"api_key": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"account_email": &schema.Schema{
-				Type:     schema.TypeString,
-				Default:  "",
 				Optional: true,
 			},
 		},
