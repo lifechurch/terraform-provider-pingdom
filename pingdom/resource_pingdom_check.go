@@ -3,6 +3,7 @@ package pingdom
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -297,7 +298,9 @@ func checkForResource(d *schema.ResourceData) (pingdom.Check, error) {
 		}
 	}
 	if v, ok := d.GetOk("tags"); ok {
-		checkParams.Tags = v.(string)
+		stringSlice := strings.Split(v.(string), ",")
+		sort.Strings(stringSlice)
+		checkParams.Tags = strings.Join(stringSlice, ",")
 	}
 
 	if v, ok := d.GetOk("probefilters"); ok {
@@ -434,6 +437,7 @@ func resourcePingdomCheckRead(d *schema.ResourceData, meta interface{}) error {
 	for _, tag := range ck.Tags {
 		tags = append(tags, tag.Name)
 	}
+	sort.Strings(tags)
 	d.Set("tags", strings.Join(tags, ","))
 
 	if ck.Status == "paused" {
