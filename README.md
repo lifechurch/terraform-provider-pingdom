@@ -15,7 +15,7 @@ This project uses [Go Modules](https://github.com/golang/go/wiki/Modules) for de
 ### Build ###
 
 ```
-go get github.com/russellcardullo/terraform-provider-pingdom
+go get github.com/lifechurch/terraform-provider-pingdom
 ```
 
 The binary will then be available at `~/go/bin/terraform-provider-pingdom`, unless you've set `$GOPATH`, in which case you'll find it at `$GOPATH/bin`
@@ -28,23 +28,17 @@ You will need to install the binary as a [terraform third party plugin](https://
 ln -s ~/go/bin/terraform-provider-pingdom ~/.terraform.d/plugins/$(uname | tr '[:upper:]' '[:lower:]')_amd64/terraform-provider-pingdom_v$(date +%Y.%m.%d)
 ```
 
-Updates can now be applied by re-running `go get github.com/russellcardullo/terraform-provider-pingdom`.
+Updates can now be applied by re-running `go get -u github.com/lifechurch/terraform-provider-pingdom`.
 
 ## Usage ##
 
 **Basic Check**
 
 ```
-variable "pingdom_user" {}
-variable "pingdom_password" {}
-variable "pingdom_api_key" {}
-variable "pingdom_account_email" {} # Optional: only required for multi-user accounts
+variable "pingdom_api_token" {}
 
 provider "pingdom" {
-    user = "${var.pingdom_user}"
-    password = "${var.pingdom_password}"
-    api_key = "${var.pingdom_api_key}"
-    account_email = "${var.pingdom_account_email}" # Optional: only required for multi-user accounts
+    api_token = "${var.pingdom_api_token}"
 }
 
 resource "pingdom_check" "example" {
@@ -77,9 +71,7 @@ resource "pingdom_check" "ping_example" {
 Apply with:
 ```
  terraform apply \
-    -var 'pingdom_user=YOUR_USERNAME' \
-    -var 'pingdom_password=YOUR_PASSWORD' \
-    -var 'pingdom_api_key=YOUR_API_KEY'
+    -var 'pingdom_api_token=YOUR_API_TOKEN'
 ```
 
 **Using attributes from other resources**
@@ -167,6 +159,8 @@ For the HTTP checks, you can set these attributes:
 **tags** - List of tags the check should contain. Should be in the format "tagA,tagB"
 
 **probefilters** - Region from which the check should originate. One of NA, EU, APAC, or LATAM. Should be in the format "region:NA"
+
+**ssl_down_days_before** - Treat the target site as down if a certificate expires within the given number of days.
 
 #### TCP specific attibutes ####
 

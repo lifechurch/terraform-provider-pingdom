@@ -171,6 +171,12 @@ func resourcePingdomCheck() *schema.Resource {
 				Optional: true,
 				ForceNew: false,
 			},
+
+			"ssl_down_days_before": {
+				Type:     schema.TypeInt,
+				Optional: true,
+				ForceNew: false,
+			},
 		},
 	}
 }
@@ -199,6 +205,7 @@ type commonCheckParams struct {
 	ProbeFilters             string
 	StringToSend             string
 	StringToExpect           string
+	SSLDownDaysBefore        int
 }
 
 func checkForResource(d *schema.ResourceData) (pingdom.Check, error) {
@@ -315,6 +322,10 @@ func checkForResource(d *schema.ResourceData) (pingdom.Check, error) {
 		checkParams.StringToExpect = v.(string)
 	}
 
+	if v, ok := d.GetOk("ssl_down_days_before"); ok {
+		checkParams.SSLDownDaysBefore = v.(int)
+	}
+
 	checkType := d.Get("type")
 	switch checkType {
 	case "http":
@@ -340,6 +351,7 @@ func checkForResource(d *schema.ResourceData) (pingdom.Check, error) {
 			ProbeFilters:             checkParams.ProbeFilters,
 			UserIds:                  checkParams.UserIds,
 			TeamIds:                  checkParams.TeamIds,
+			SSLDownDaysBefore:        checkParams.SSLDownDaysBefore,
 		}, nil
 	case "ping":
 		return &pingdom.PingCheck{
@@ -481,6 +493,7 @@ func resourcePingdomCheckRead(d *schema.ResourceData, meta interface{}) error {
 		d.Set("shouldcontain", ck.Type.HTTP.ShouldContain)
 		d.Set("shouldnotcontain", ck.Type.HTTP.ShouldNotContain)
 		d.Set("postdata", ck.Type.HTTP.PostData)
+		d.Set("ssl_down_days_before", ck.Type.HTTP.SSLDownDaysBefore)
 
 		if v, ok := ck.Type.HTTP.RequestHeaders["User-Agent"]; ok {
 			if strings.HasPrefix(v, "Pingdom.com_bot_version_") {

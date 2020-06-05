@@ -2,7 +2,7 @@ module github.com/grnhse/terraform-provider-pingdom
 
 go 1.12
 
-replace github.com/russellcardullo/go-pingdom => github.com/grnhse/go-pingdom v1.0.1-0.20190925174058-b35ef1008725
+replace github.com/russellcardullo/go-pingdom => github.com/lifechurch/go-pingdom v1.0.3
 
 replace github.com/russellcardullo/terraform-provider-pingdom => ./
 
