@@ -1,4 +1,4 @@
-module github.com/grnhse/terraform-provider-pingdom
+module github.com/lifechurch/terraform-provider-pingdom
 
 go 1.12
 
